@@ -381,7 +381,7 @@ License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 Contact
-	•	GitHub Issues:  [Open an Issue](https://github.com/haozheng95/smscli/issues)
+	•	GitHub Issues:  [Open an Issue](https://github.com/haozheng95/smscli/issues)  
 	•	Email: yinhaozheng77625961@gmail.com
 
 Thank you for using smsctl!
