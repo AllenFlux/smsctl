@@ -1,6 +1,6 @@
 import requests
 
-from sms_client import settings
+from core import settings
 
 """http://192.168.1.14:8822/api/v1/sms/task/list"""
 

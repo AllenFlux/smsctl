@@ -1,6 +1,6 @@
 import requests
 
-from sms_client import settings
+from core import settings
 
 
 def controller_sub_device_list(page, sub_user_id):

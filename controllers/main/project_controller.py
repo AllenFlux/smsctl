@@ -1,6 +1,6 @@
 import requests
 
-from sms_client import settings
+from core import settings
 
 """http://192.168.1.14:8822/api/v1/sms/project/list"""
 def controller_main_project_list(page):
@@ -26,7 +26,7 @@ def controller_main_project_create(project_name, note):
 
 
 def allocate_sub_account_2_project(project_id,account_id):
-    url = settings.url_prefix +"sms/account/project"
+    url = settings.url_prefix + "sms/account/project"
     resp = requests.post(url, json={"project_id": project_id, "account_id":account_id})
     if resp.status_code != 200:
         raise Exception(resp.status_code)
@@ -34,7 +34,7 @@ def allocate_sub_account_2_project(project_id,account_id):
 
 
 def allocate_device_2_project(device_id, project_id):
-    url = settings.url_prefix +"sms/device/project"
+    url = settings.url_prefix + "sms/device/project"
     resp = requests.post(url, json={"device_id_list": [device_id], "project_id": project_id})
     if resp.status_code != 200:
         raise Exception(resp.status_code)

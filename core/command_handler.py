@@ -4,17 +4,74 @@ import time
 
 import click
 
-from sms_client.sms_core import m_list_project, m_create_project, m_list_device_main, m_allocate_device_2_project, \
-    m_list_group, m_create_group, m_list_device_sub, m_allocate_device_2_group, m_sub_upload_task, m_list_tasks, \
-    m_list_tasks_sub, m_download_task_file, decode_download_task_file, m_controller_main_sms_record_list, \
-    m_controller_sub_sms_record_list, m_sub_get_conversation_record_list, m_main_get_conversation_record_list, \
-    m_sub_get_conversation_record, m_sub_post_conversation_record
+# Project management-related functions
+from core.core import (
+    list_projects_with_details,   # Fetch and list projects with details
+    handle_project_creation,     # Create a new project
+)
+
+# Device management-related functions
+from core.core import (
+    handle_device_list,                  # List all devices
+    handle_device_list_for_sub_user,     # List devices assigned to a sub-user
+    handle_device_allocation_to_project, # Allocate a device to a project
+    list_user_groups,                    # Fetch groups of a user
+    handle_group_creation,               # Create a new group
+    handle_device_allocation,            # Allocate a device to a group
+)
+
+# Task management-related functions
+from core.core import (
+    handle_task_upload,         # Upload a new task
+    list_tasks_with_details,    # List all tasks with details
+    list_sub_tasks_with_details,# List tasks for a specific sub-user
+    download_task_file,         # Download a task file
+)
+
+# Messaging-related functions
+from core.core import (
+    fetch_main_sms_record_list,          # Fetch SMS records for the main user
+    list_sub_user_sms_records,           # List SMS records for a sub-user
+    fetch_and_format_conversation_records, # Fetch and format conversation records
+    fetch_main_conversation_records,     # Fetch main user conversation records
+    fetch_conversation_record,           # Fetch a specific conversation record
+    post_conversation_record,            # Post a new conversation record
+)
+
+# Utility functions
+from utils.formatters import decode_task_file_content # Decode task file content to a readable format
 
 
 @click.group()
 def sms_cli():
-    """sms_cli"""
+    """
+    smsctl is a command-line tool designed for managing and automating
+    SMS tasks, devices, projects, groups, chat/conversation records, and more.
+    The CLI is flexible, allowing for quick integration into your workflows.
+    """
     pass
+
+@click.command(name="config")
+@click.option(
+    "-url",
+    "--url",
+    default="https://a2.pppkf.cc/api/v1/",
+    help="Sets the URL endpoint for the SMS CLI. Defaults to https://a2.pppkf.cc/api/v1/."
+)
+def sms_cli_config(url):
+    """
+    Configures the SMS CLI by storing the service endpoint URL
+    in a local JSON configuration file.
+
+    Args:
+        url (str): The base URL endpoint for SMS CLI requests.
+    """
+    home_dir = os.path.expanduser("~")
+    # Note: "~/.smscli.json" expands to a path under your home directory.
+    # Make sure you handle that expansion properly in your actual code.
+    with open(home_dir+"/.smscli.json", "w") as f:
+        json.dump({"url": url}, f)
+    click.echo(f"Configuration saved with URL: {url}")
 
 @click.command(name="list-device")
 @click.option(
@@ -33,7 +90,7 @@ def list_device(page):
     Returns:
         Prints the device list to the console.
     """
-    out = m_list_device_main(page)
+    out = handle_device_list(page)
     click.echo(out)
 
 @click.command(name="sub-list-device")
@@ -61,7 +118,7 @@ def sub_list_device(page, sub_user_id):
     Returns:
         Prints the device list for the sub-user to the console.
     """
-    out = m_list_device_sub(page,sub_user_id)
+    out = handle_device_list_for_sub_user(page,sub_user_id)
     click.echo(out)
 
 # Project
@@ -82,7 +139,7 @@ def list_project(page):
     Returns:
         Prints the project list to the console.
     """
-    out = m_list_project(page)
+    out = list_projects_with_details(page)
     click.echo(out)
 
 @click.command(name="create-project")
@@ -111,7 +168,7 @@ def create_project(project_name, note):
     Returns:
         Prints the result of the project creation operation to the console.
     """
-    out = m_create_project(project_name=project_name, note=note)
+    out = handle_project_creation(project_name=project_name, note=note)
     click.echo(out)
 
 @click.command(name="delete-project")
@@ -149,7 +206,7 @@ def allocate_device_to_project(device_id,project_id):
     Returns:
         Prints the result of the allocation operation to the console.
     """
-    out = m_allocate_device_2_project(device_id, project_id)
+    out = handle_device_allocation_to_project(device_id, project_id)
     click.echo(out)
 
 # Task
@@ -213,7 +270,7 @@ def create_task(sub_user_id,file, task_name, group_id, interval_time, timing_sta
     Returns:
         Prints the result of the task creation operation to the console.
     """
-    out = m_sub_upload_task(
+    out = handle_task_upload(
         dict(
             task_name=task_name,
             group_id=group_id,
@@ -246,7 +303,7 @@ def list_tasks(page):
     Returns:
         Prints the task list to the console.
     """
-    out = m_list_tasks(page)
+    out = list_tasks_with_details(page)
     click.echo(out)
 
 @click.command(name="sub-list-tasks")
@@ -274,7 +331,7 @@ def sub_list_tasks(page, sub_user_id):
     Returns:
         Prints the sub-task list to the console.
     """
-    out = m_list_tasks_sub(page, sub_user_id)
+    out = list_sub_tasks_with_details(page, sub_user_id)
     click.echo(out)
 
 @click.command(name="download-task")
@@ -295,12 +352,12 @@ def download_task(file_name):
         Returns:
             Prints a success message with the save path upon successful download.
         """
-    data = m_download_task_file(file_name)
+    data = download_task_file(file_name)
     if data["code"] != 0:
         click.echo(data)
         return
     click.echo("Interpret the contents of the file.")
-    out, dict_data = decode_download_task_file(data)
+    out, dict_data = decode_task_file_content(data)
     click.echo(out)
     file_path = os.getcwd() + "/" + file_name
     click.echo("File storage path:" + file_path)
@@ -325,7 +382,7 @@ def list_task_record(page):
     Returns:
         Prints the SMS record list to the console.
     """
-    out = m_controller_main_sms_record_list(page)
+    out = fetch_main_sms_record_list(page)
     click.echo(out)
 
 @click.command(name="sub-list-task-record")
@@ -353,7 +410,7 @@ def sub_list_task_record(page, sub_user_id):
         Returns:
             Prints the SMS record list for the sub-user to the console.
     """
-    out = m_controller_sub_sms_record_list(page, sub_user_id)
+    out = list_sub_user_sms_records(page, sub_user_id)
     click.echo(out)
 
 # Group
@@ -375,7 +432,7 @@ def list_groups(sub_user_id):
     Returns:
         Prints the group list to the console.
     """
-    out = m_list_group(sub_user_id)
+    out = list_user_groups(sub_user_id)
     click.echo(out)
 
 @click.command(name="create-group")
@@ -412,7 +469,7 @@ def create_group(sub_user_id, project_id, group_name):
     Returns:
         None: Outputs the result of the group creation operation to the console.
     """
-    out = m_create_group(group_name=group_name, project_id=project_id, sub_user_id=sub_user_id)
+    out = handle_group_creation(group_name=group_name, project_id=project_id, sub_user_id=sub_user_id)
     click.echo(out)
 
 @click.command(name="allocate-device-to-group")
@@ -449,7 +506,7 @@ def allocate_device_to_group(sub_user_id, group_id, device_id ):
     Returns:
         Prints the result of the allocation operation to the console.
     """
-    out = m_allocate_device_2_group(sub_user_id=sub_user_id, group_id=group_id, device_id=device_id)
+    out = handle_device_allocation(sub_user_id=sub_user_id, group_id=group_id, device_id=device_id)
     click.echo(out)
     pass
 @click.command(name="update-group")
@@ -487,7 +544,7 @@ def list_chats(project_id, page):
     Returns:
         None: Outputs the conversation records for the specified project and page to the console.
     """
-    out = m_main_get_conversation_record_list(project_id=project_id, page=page)
+    out = fetch_main_conversation_records(project_id=project_id, page=page)
     click.echo(out)
 
 @click.command(name="sub-list-chats")
@@ -525,7 +582,7 @@ def sub_list_chats(project_id, sub_user_id, page):
     Returns:
         None: Outputs the conversation records for the specified sub-user and project to the console.
     """
-    out = m_sub_get_conversation_record_list(sub_user_id, project_id, page)
+    out = fetch_and_format_conversation_records(sub_user_id, project_id, page)
     click.echo(out)
 @click.command(name="view-chat")
 @click.option(
@@ -545,7 +602,7 @@ def view_chat(chat_log_id):
     Returns:
         None: Outputs the details of the specified chat log to the console.
     """
-    out = m_sub_get_conversation_record(chat_log_id)
+    out = fetch_conversation_record(chat_log_id)
     click.echo(out)
 
 @click.command(name="reply-chat")
@@ -574,7 +631,7 @@ def reply_chat(chat_log_id, text):
     Returns:
         None: Outputs the result of the reply operation to the console.
     """
-    out = m_sub_post_conversation_record(chat_log_id, text)
+    out = post_conversation_record(chat_log_id, text)
     click.echo(out)
 
 # Device
@@ -622,6 +679,7 @@ sms_cli.add_command(sub_list_device)
 sms_cli.add_command(download_task)
 sms_cli.add_command(sub_list_task_record)
 sms_cli.add_command(sub_list_chats)
+sms_cli.add_command(sms_cli_config)
 
 if __name__ == '__main__':
     sms_cli()

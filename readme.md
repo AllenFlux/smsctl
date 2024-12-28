@@ -14,9 +14,60 @@ Install smsctl from PyPI using:
 ```
 pip install smsctl
 ```
+Below is a revised Installation section with the function reference but without showing its full implementation details:
 
+However, before using the CLI for the first time, you should configure the base URL endpoint by running:
+```aiignore
+smsctl config --url "https://your-custom-endpoint.com/api/v1/"
+```
+
+This command will store the service endpoint URL in a local JSON configuration file, ensuring smsctl knows where to send requests.
+```aiignore
+Configuration saved with URL: https://your-custom-endpoint.com/api/v1/
+```
+
+Now you’re all set to use smsctl. To see the list of available commands and options:
+
+smsctl --help
 This will provide the smsctl command-line interface.
+```aiignore
+Usage: smscli [OPTIONS] COMMAND [ARGS]...
 
+  sms_cli
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  allocate-device-to-group    Allocates a device to a specific group.
+  allocate-device-to-project  Allocates a device to a specific project.
+  config                     Configures the SMS CLI by storing the...
+  create-group                Creates a new group for a specific sub-user...
+  create-project              Creates a new project.
+  create-task                 Creates a new task for a sub-user.
+  delete-group                delete-group
+  delete-project              delete-project
+  delete-task                 delete-task
+  download-task               Downloads the file associated with a...
+  fetch-device-task           fetch-device-task
+  list-chats                  Retrieves and displays a list of...
+  list-device                 Lists all devices associated with the main...
+  list-groups                 Lists all groups associated with the main...
+  list-project                Lists all projects associated with the main...
+  list-task-record            Lists SMS records for the main user.
+  list-tasks                  Lists all tasks associated with the main user.
+  register-device             register-device
+  reply-chat                  Sends a reply to a specific chat log.
+  report-receive-content      report-receive-content
+  report-task-result          report-task-result
+  sub-list-chats              Retrieves and displays a list of...
+  sub-list-device             Lists all devices associated with a...
+  sub-list-task-record        Lists SMS records for a specific sub-user.
+  sub-list-tasks              Lists all tasks associated with a specific...
+  update-group                update-group
+  update-projec               update-project
+  view-chat                   Retrieves and displays the details of a...
+```
 ### Quick Usage
 
 After installation, run:

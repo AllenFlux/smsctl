@@ -1,7 +1,7 @@
 import requests
 from requests_toolbelt import MultipartEncoder
 
-from sms_client import settings
+from core import settings
 
 """http://192.168.1.14:8822/api/v1/sms/sub/group/list"""
 def controller_sub_group_list(sub_user_id):
@@ -26,7 +26,7 @@ def allocate_device_2_group(device_id, group_id, sub_user_id):
     return resp.json()
 
 def sub_upload_task(task_name, group_id, sub_user_id, file, timing_start_time, interval_time):
-    url  = settings.url_prefix +"sms/sub/task"
+    url  = settings.url_prefix + "sms/sub/task"
     with open(file) as f:
         m = MultipartEncoder(
             fields={'interval_time': interval_time,

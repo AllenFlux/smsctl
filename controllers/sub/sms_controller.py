@@ -1,6 +1,7 @@
 import requests
 
-from sms_client import settings
+from core import settings
+
 
 def controller_sub_sms_report_list(page, sub_user_id):
     url = settings.url_prefix + "sms/sub/task/list"
@@ -42,7 +43,7 @@ def sub_get_conversation_record(chat_log_id):
 def sub_post_conversation_record(chat_log_id,text):
     data = {
         # "sub_user_id":test_sub_user_id,
-        "chart_log_id": chat_log_id,
+        "chat_log_id": chat_log_id,
         "content":text
     }
     url = settings.url_prefix + "sms/sub/conversation/record"

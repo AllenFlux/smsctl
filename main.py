@@ -1,4 +1,4 @@
-import sms_client.sms_command
+from core import command_handler
 
 if __name__ == '__main__':
-    sms_client.sms_command.sms_cli()
+    command_handler.sms_cli()
