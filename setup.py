@@ -4,7 +4,7 @@ with open("/Users/baizhe/PycharmProjects/smscli/readme.md", "r", encoding="utf-8
 
 setup(
     name="smsctl",  # 你的项目名称，例如 "sms-cli"
-    version="1.0.3",  # 版本号，遵循语义化版本规范
+    version="1.0.4",  # 版本号，遵循语义化版本规范
     author="Allen Y",  # 你的名字或组织名称
     author_email="yinhaozheng77625961@gmail.com",  # 你的邮箱
     description="smsctl is a CLI for streamlined SMS management. It provides commands for managing projects, devices, tasks, groups, and chat records, letting you send, receive, and track SMS from one place. Designed for flexible workflows, it handles everything from bulk tasks to conversation monitoring.",  # 项目的简短描述

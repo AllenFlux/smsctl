@@ -69,6 +69,7 @@ Commands:
   update-group                update-group
   update-projec               update-project
   view-chat                   Retrieves and displays the details of a...```
+```
 ### Quick Usage
 
 After installation, run:
