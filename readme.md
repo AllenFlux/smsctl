@@ -33,7 +33,9 @@ This will provide the smsctl command-line interface.
 ```aiignore
 Usage: smscli [OPTIONS] COMMAND [ARGS]...
 
-  sms_cli
+  smsctl is a command-line tool designed for managing and automating SMS
+  tasks, devices, projects, groups, chat/conversation records, and more. The
+  CLI is flexible, allowing for quick integration into your workflows.
 
 Options:
   --help  Show this message and exit.
@@ -41,7 +43,7 @@ Options:
 Commands:
   allocate-device-to-group    Allocates a device to a specific group.
   allocate-device-to-project  Allocates a device to a specific project.
-  config                     Configures the SMS CLI by storing the...
+  config                      Configures the SMS CLI by storing the...
   create-group                Creates a new group for a specific sub-user...
   create-project              Creates a new project.
   create-task                 Creates a new task for a sub-user.
@@ -66,8 +68,7 @@ Commands:
   sub-list-tasks              Lists all tasks associated with a specific...
   update-group                update-group
   update-projec               update-project
-  view-chat                   Retrieves and displays the details of a...
-```
+  view-chat                   Retrieves and displays the details of a...```
 ### Quick Usage
 
 After installation, run:

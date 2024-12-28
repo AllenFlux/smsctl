@@ -4,8 +4,8 @@ with open("/Users/baizhe/PycharmProjects/smscli/readme.md", "r", encoding="utf-8
 
 setup(
     name="smsctl",  # 你的项目名称，例如 "sms-cli"
-    version="1.0.0",  # 版本号，遵循语义化版本规范
-    author="haozheng95",  # 你的名字或组织名称
+    version="1.0.3",  # 版本号，遵循语义化版本规范
+    author="Allen Y",  # 你的名字或组织名称
     author_email="yinhaozheng77625961@gmail.com",  # 你的邮箱
     description="smsctl is a CLI for streamlined SMS management. It provides commands for managing projects, devices, tasks, groups, and chat records, letting you send, receive, and track SMS from one place. Designed for flexible workflows, it handles everything from bulk tasks to conversation monitoring.",  # 项目的简短描述
     long_description=long_description,  # 长描述，通常从 README.md 文件读取
@@ -33,7 +33,7 @@ setup(
     ],
     entry_points={  # 配置命令行入口
         'console_scripts': [
-            'smscli=sms_client.sms_command:sms_cli',  # 例如 'sms-cli=main:main'，其中 main 是 main.py 文件中的主函数
+            'smscli=core.command_handler:sms_cli',  # 例如 'sms-cli=main:main'，其中 main 是 main.py 文件中的主函数
         ],
     },
     include_package_data=True, # 包含包内其他数据文件，比如templates, static等
